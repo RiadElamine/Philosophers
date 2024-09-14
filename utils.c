@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/13 06:40:56 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:32:05 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,16 @@ t_philos	*ft_lstnew(int *args, int i, int ac)
 	philo = malloc(sizeof(t_philos));
 	if (!philo)
 		return (NULL);
-	philo->philo = NULL;
-	philo->num_philos = args[0];
 	philo->philo_num = i + 1;
 	philo->time_to_die = args[1];
 	philo->time_to_eat = args[2];
 	philo->time_to_sleep = args[3];
 	if (ac == 6)
-		philo->num_of_eat = args[4];
+		philo->num_times_to_eat = args[4];
 	else
-		philo->num_of_eat = -1;
-	philo->start_time = 0;
+		philo->num_times_to_eat = -1;
+	philo->last_meal = 0;
+	philo->dead_flag = 0;
 	pthread_mutex_init(&philo->fork, NULL);
 	philo->next = NULL;
 	philo->prev = NULL;

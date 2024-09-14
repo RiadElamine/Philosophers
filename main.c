@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:30:23 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/13 07:01:53 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:42:29 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@ void	f(void)
 {
 	system("leaks philo");
 }
-t_monitor	monitor;
-monitor.dead_flag = 0;
-pthread_mutex_init(&monitor.mutex, NULL);
-
 
 void	take_forks(t_philos	*philo)
 {
@@ -28,7 +24,10 @@ void	take_forks(t_philos	*philo)
 	pthread_mutex_lock(&philo->prev->fork);
 	printf("Philosopher %d takes a fork\n", philo->philo_num);
 	printf("Philosopher %d is Eating\n", philo->philo_num);
-	usleep(philo->time_to_eat);
+	philo->last_meal = getime();
+	if (philo->num_times_to_eat != -1)
+		philo->num_times_to_eat--;
+	ft_usleep(philo->time_to_eat);
 }
 
 void	put_forks(t_philos	*philo)
@@ -36,34 +35,30 @@ void	put_forks(t_philos	*philo)
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->prev->fork);
 	printf("Philosopher %d is sleeping\n", philo->philo_num);
-	usleep(philo->time_to_sleep);
+	ft_usleep(philo->time_to_sleep);
 	printf("Philosopher %d is thinking\n", philo->philo_num);
 }
 
 void	*routine(void *arg)
 {
 	t_philos	*philo;
-	int			i;
 
 	philo = (t_philos *)arg;
 	if (philo->philo_num % 2 == 0)
-		usleep(philo->time_to_eat);
-	i = 0;
-	philo->start_time = getime();
-	while (1)
+		ft_usleep(philo->time_to_eat);
+	while (!philo->dead_flag)
 	{
-		// exit(0);
+		if (philo->last_meal != 0)
+			philo->last_meal = getime() - philo->last_meal;
+		if (philo->last_meal > philo->time_to_die)
+		{
+			philo->dead_flag = 1;
+			printf("Philosopher %d died\n", philo->philo_num);
+		}
 		take_forks(philo);
 		put_forks(philo);
-
-		if (getime() - philo->start_time > philo->time_to_die)
-		{
-			printf("Philosopher %d died\n", philo->philo_num);
-			break;
-		}
-		printf("---- %ld %ld\n", getime() - philo->start_time, philo->time_to_die);
-		// if (i == 10)
-		// 	exit(0); 
+		if (philo->num_times_to_eat == 0)
+			break ;
 	}
 	return (NULL);
 }
