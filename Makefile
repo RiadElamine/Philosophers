@@ -6,7 +6,7 @@
 #    By: relamine <relamine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/04 10:34:16 by relamine          #+#    #+#              #
-#    Updated: 2024/09/04 11:52:07 by relamine         ###   ########.fr        #
+#    Updated: 2024/09/13 05:54:56 by relamine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,10 @@
 NAME = philo
 
 SOURCES =  main.c \
+			parser.c \
 			philo.c \
-			parser.c
+			utils.c \
+			monitor.c \
 
 SRC_OBJECTS = $(SOURCES:.c=.o)
 
@@ -37,4 +39,5 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME) 
+
 re: fclean all 
