@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:34:37 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/14 22:30:49 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/15 16:02:14 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,14 @@ typedef struct s_philos
 {
 	pthread_t			philo;
 	int					philo_num;
+	int					num_of_philos;
 	size_t				time_to_die;
 	size_t				time_to_eat;
 	size_t				time_to_sleep;
 	int					num_times_to_eat;
 	size_t				last_meal;
+	size_t				start_time;
 	pthread_mutex_t		fork;
-	int					dead_flag;
 	struct s_philos		*next;
 	struct s_philos		*prev;
 }	t_philos;
@@ -44,6 +45,6 @@ int			join_philosophers(t_philos *philos, int ac);
 int			create_philosopher_threads(t_philos *philos,
 				void *(*routine)(void *), int ac);
 int			initialize_philosophers(t_philos **philos, int *args, int ac);
-void		destroying_mutexes(t_philos	*philos);
 int			ft_usleep(size_t ms);
 size_t		getime(void);
+int			ft_died_or_stop(t_philos *philo);

@@ -6,7 +6,7 @@
 #    By: relamine <relamine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/04 10:34:16 by relamine          #+#    #+#              #
-#    Updated: 2024/09/13 05:54:56 by relamine         ###   ########.fr        #
+#    Updated: 2024/09/15 16:05:05 by relamine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SOURCES =  main.c \
 SRC_OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread #-g -fsanitize=address
 RM =rm -f
 
 %.o: %.c philo.h

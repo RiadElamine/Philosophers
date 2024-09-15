@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:45:42 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/14 21:05:08 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/15 16:02:11 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	join_philosophers(t_philos *philos, int ac)
 		i++;
 		philo_tmp = philo_tmp->next;
 	}
-	ft_lstclear(&philos);
 	return (0);
 }
 
@@ -81,20 +80,4 @@ int	initialize_philosophers(t_philos **philos, int *args, int ac)
 	philo_first->prev = ft_lstlast(*philos);
 	philo_tmp->next = philo_first;
 	return (0);
-}
-
-void	destroying_mutexes(t_philos	*philos)
-{
-	t_philos	*philo_tmp;
-	t_philos	*philo_first;
-
-	philo_tmp = philos;
-	philo_first = philos;
-	while (philo_tmp)
-	{
-		pthread_mutex_destroy(&philo_tmp->fork);
-		philo_tmp = philo_tmp->next;
-		if (philo_tmp == philo_first)
-			break ;
-	}
 }

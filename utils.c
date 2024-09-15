@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/14 22:32:05 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/15 16:03:17 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_philos	*ft_lstnew(int *args, int i, int ac)
 	if (!philo)
 		return (NULL);
 	philo->philo_num = i + 1;
+	philo->num_of_philos = args[0];
 	philo->time_to_die = args[1];
 	philo->time_to_eat = args[2];
 	philo->time_to_sleep = args[3];
@@ -28,7 +29,6 @@ t_philos	*ft_lstnew(int *args, int i, int ac)
 	else
 		philo->num_times_to_eat = -1;
 	philo->last_meal = 0;
-	philo->dead_flag = 0;
 	pthread_mutex_init(&philo->fork, NULL);
 	philo->next = NULL;
 	philo->prev = NULL;
@@ -76,6 +76,7 @@ void	ft_lstclear(t_philos **lst)
 	while (*lst)
 	{
 		nextnode = (*lst)->next;
+		pthread_mutex_destroy(&(*lst)->fork);
 		free(*lst);
 		*lst = nextnode;
 		if (*lst == current)
