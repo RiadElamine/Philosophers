@@ -6,7 +6,7 @@
 #    By: relamine <relamine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/04 10:34:16 by relamine          #+#    #+#              #
-#    Updated: 2024/09/15 16:05:05 by relamine         ###   ########.fr        #
+#    Updated: 2024/09/15 19:23:32 by relamine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,19 +14,19 @@
 
 NAME = philo
 
-SOURCES =  main.c \
-			parser.c \
-			philo.c \
-			utils.c \
-			monitor.c \
+SOURCES =	Mandatory/main.c \
+			Mandatory/parser.c \
+			Mandatory/philo.c \
+			Mandatory/utils.c \
+			Mandatory/monitor.c \
 
 SRC_OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread #-g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -pthread #-g #-fsanitize=thread #-fsanitize=address
 RM =rm -f
 
-%.o: %.c philo.h
+Mandatory/%.o: Mandatory/%.c Mandatory/philo.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)

@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:30:23 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/15 16:04:26 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:57:29 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void	*routine(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	philo->start_time = getime();
 	if (philo->philo_num % 2 == 0)
 		ft_usleep(philo->time_to_eat);
-	philo->start_time = getime();
 	while (!ft_died_or_stop(philo))
 	{
 		take_forks(philo);
@@ -60,10 +60,14 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
+
+
 int	main(int ac, char **av)
 {
 	int			*args;
 	t_philos	*philos;
+
+
 
 	args = ft_parser(ac, av);
 	if (!args)
@@ -77,6 +81,5 @@ int	main(int ac, char **av)
 	if (join_philosophers(philos, ac))
 		return (1);
 	ft_lstclear(&philos);
-	printf("All threads finished\n");
 	return (0);
 }
