@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:30:23 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/15 19:57:29 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:19:50 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,18 @@ void	take_forks(t_philos	*philo)
 	ft_usleep(philo->time_to_eat);
 }
 
-void	put_forks(t_philos	*philo)
+int	put_forks(t_philos	*philo)
 {
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->prev->fork);
+	if (philo->num_times_to_eat == 0)
+		return (1);
 	printf("%zums Philosopher %d is sleeping\n",
 		getime() - philo->start_time, philo->philo_num);
 	ft_usleep(philo->time_to_sleep);
 	printf("%zums Philosopher %d is thinking\n",
 		getime() - philo->start_time, philo->philo_num);
+	return (0);
 }
 
 void	*routine(void *arg)
@@ -55,7 +58,8 @@ void	*routine(void *arg)
 	while (!ft_died_or_stop(philo))
 	{
 		take_forks(philo);
-		put_forks(philo);
+		if (put_forks(philo))
+			break ;
 	}
 	return (NULL);
 }
@@ -66,20 +70,23 @@ int	main(int ac, char **av)
 {
 	int			*args;
 	t_philos	*philos;
+	t_monitor	*monitor;
 
-
-
+	// atexit(f);
 	args = ft_parser(ac, av);
 	if (!args)
 		return (1);
-	if (initialize_philosophers(&philos, args, ac))
-		return (1);
+	if (initialize_monitor(&monitor))
+		return (free(args), 1);
+	if (initialize_philosophers(&philos, monitor, args, ac))
+		return (free(monitor), 1);
 	ac = args[0];
 	free(args);
 	if (create_philosopher_threads(philos, routine, ac))
-		return (1);
+		return (free(monitor), 1);
 	if (join_philosophers(philos, ac))
-		return (1);
+		return (free(monitor), 1);
 	ft_lstclear(&philos);
+	free(monitor);
 	return (0);
 }

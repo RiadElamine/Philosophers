@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/15 16:03:17 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/16 18:57:15 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_philos	*ft_lstnew(int *args, int i, int ac)
 	else
 		philo->num_times_to_eat = -1;
 	philo->last_meal = 0;
-	pthread_mutex_init(&philo->fork, NULL);
+	if (pthread_mutex_init(&philo->fork, NULL))
+		return (free(philo), NULL);
 	philo->next = NULL;
 	philo->prev = NULL;
 	return (philo);

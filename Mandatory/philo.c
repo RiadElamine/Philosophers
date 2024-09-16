@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:45:42 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/15 16:02:11 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:20:12 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,20 @@ int	create_philosopher_threads(t_philos *philos,
 	return (0);
 }
 
-int	initialize_philosophers(t_philos **philos, int *args, int ac)
+int	initialize_monitor(t_monitor **monitor)
+{
+	(*monitor) = malloc(sizeof(t_monitor));
+	if (!(*monitor))
+		return (1);
+	if (pthread_mutex_init(&(*monitor)->dead_lock, NULL))
+		return (free((*monitor)), 1);
+	if (pthread_mutex_init(&(*monitor)->meal_lock, NULL))
+		return (free((*monitor)), 1);
+	(*monitor)->dead_flag = 0;
+	return (0);
+}
+
+int	initialize_philosophers(t_philos **philos, t_monitor *monitor, int *args, int ac)
 {
 	t_philos	*philo_tmp;
 	t_philos	*philo_first;
@@ -74,6 +87,7 @@ int	initialize_philosophers(t_philos **philos, int *args, int ac)
 		}
 		if (i == 0)
 			philo_first = philo_tmp;
+		philo_tmp->monitor = monitor;
 		ft_lstadd_back(philos, philo_tmp);
 		i++;
 	}
