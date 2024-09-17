@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/16 18:57:15 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/17 23:21:40 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void	ft_lstclear(t_philos **lst)
 	if (!lst)
 		return ;
 	current = *lst;
+	pthread_mutex_destroy(&(*lst)->monitor->dead_lock);
+	pthread_mutex_destroy(&(*lst)->monitor->write_lock);
 	while (*lst)
 	{
 		nextnode = (*lst)->next;
@@ -83,4 +85,19 @@ void	ft_lstclear(t_philos **lst)
 		if (*lst == current)
 			break ;
 	}
+}
+
+int	custom_printf(t_philos *philo, char *status)
+{
+	pthread_mutex_lock(&philo->monitor->write_lock);
+	if (philo->monitor->dead_flag == 0)
+		printf("%lums Philosopher %d %s\n",
+			getime() - philo->start_time, philo->philo_num, status);
+	else
+	{
+		pthread_mutex_unlock(&philo->monitor->write_lock);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->monitor->write_lock);
+	return (0);
 }

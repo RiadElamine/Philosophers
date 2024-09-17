@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:30:23 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/16 19:19:50 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/17 23:28:37 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	f(void)
 void	take_forks(t_philos	*philo)
 {
 	pthread_mutex_lock(&philo->fork);
-	printf("%zums Philosopher %d takes a fork\n",
-		getime() - philo->start_time, philo->philo_num);
+	if (custom_printf(philo, "takes a fork"))
+		return ;
 	pthread_mutex_lock(&philo->prev->fork);
-	printf("%zums Philosopher %d takes a fork\n",
-		getime() - philo->start_time, philo->philo_num);
+	if (custom_printf(philo, "takes a fork"))
+		return ;
 	printf("%zums Philosopher %d is Eating\n",
 		getime() - philo->start_time, philo->philo_num);
 	philo->last_meal = getime();
@@ -33,18 +33,17 @@ void	take_forks(t_philos	*philo)
 	ft_usleep(philo->time_to_eat);
 }
 
-int	put_forks(t_philos	*philo)
+void	put_forks(t_philos	*philo)
 {
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->prev->fork);
 	if (philo->num_times_to_eat == 0)
-		return (1);
-	printf("%zums Philosopher %d is sleeping\n",
-		getime() - philo->start_time, philo->philo_num);
+		return ;
+	if (custom_printf(philo, "is sleeping"))
+		return ;
 	ft_usleep(philo->time_to_sleep);
-	printf("%zums Philosopher %d is thinking\n",
-		getime() - philo->start_time, philo->philo_num);
-	return (0);
+	if (custom_printf(philo, "is thinking"))
+		return ;
 }
 
 void	*routine(void *arg)
@@ -58,13 +57,10 @@ void	*routine(void *arg)
 	while (!ft_died_or_stop(philo))
 	{
 		take_forks(philo);
-		if (put_forks(philo))
-			break ;
+		put_forks(philo);
 	}
 	return (NULL);
 }
-
-
 
 int	main(int ac, char **av)
 {
@@ -72,21 +68,20 @@ int	main(int ac, char **av)
 	t_philos	*philos;
 	t_monitor	*monitor;
 
-	// atexit(f);
+	atexit(f);
 	args = ft_parser(ac, av);
 	if (!args)
 		return (1);
 	if (initialize_monitor(&monitor))
 		return (free(args), 1);
 	if (initialize_philosophers(&philos, monitor, args, ac))
-		return (free(monitor), 1);
-	ac = args[0];
-	free(args);
-	if (create_philosopher_threads(philos, routine, ac))
-		return (free(monitor), 1);
-	if (join_philosophers(philos, ac))
-		return (free(monitor), 1);
+		return (1);
+	if (create_philosopher_threads(philos, routine, args[0]))
+		return (free(args), free(monitor), 1);
+	if (join_philosophers(philos, args[0]))
+		return (free(args), free(monitor), 1);
 	ft_lstclear(&philos);
 	free(monitor);
+	free(args);
 	return (0);
 }
