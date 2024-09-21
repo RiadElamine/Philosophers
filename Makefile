@@ -23,7 +23,7 @@ SOURCES =	Mandatory/main.c \
 SRC_OBJECTS = $(SOURCES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread #-g -fsanitize=thread #-fsanitize=thread -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -pthread -g -fsanitize=thread #-fsanitize=thread -fsanitize=address
 RM =rm -f
 
 Mandatory/%.o: Mandatory/%.c Mandatory/philo.h

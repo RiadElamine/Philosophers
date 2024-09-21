@@ -24,6 +24,7 @@ typedef struct s_monitor
 {
 	int				dead_flag;
 	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	write_lock;
 }					t_monitor;
 
@@ -59,3 +60,5 @@ int			ft_usleep(size_t ms);
 size_t		getime(void);
 int			ft_died_or_stop(t_philos *philo);
 int			custom_printf(t_philos *philo, char *status);
+void		*monitor_died(void *arg);
+

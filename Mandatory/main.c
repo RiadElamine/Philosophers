@@ -21,24 +21,44 @@ void	take_forks(t_philos	*philo)
 {
 	pthread_mutex_lock(&philo->fork);
 	if (custom_printf(philo, "takes a fork"))
+	{
 		return ;
+	}
 	pthread_mutex_lock(&philo->prev->fork);
 	if (custom_printf(philo, "takes a fork"))
+	{
 		return ;
+	}
 	printf("%zums Philosopher %d is Eating\n",
 		getime() - philo->start_time, philo->philo_num);
+	pthread_mutex_lock(&philo->monitor->dead_lock);
 	philo->last_meal = getime();
-	if (philo->num_times_to_eat != -1)
-		philo->num_times_to_eat--;
+	pthread_mutex_unlock(&philo->monitor->dead_lock);
 	ft_usleep(philo->time_to_eat);
+	// pthread_mutex_lock(&philo->monitor->meal_lock);
+	// if (philo->num_times_to_eat != -1)
+	// 	philo->num_times_to_eat--;
+	// if (philo->num_times_to_eat == 0)
+	// {
+	// 	// pthread_mutex_lock(&philo->monitor->write_lock);
+	// 	// philo->monitor->dead_flag = 1;
+	// 	// pthread_mutex_unlock(&philo->monitor->write_lock);
+	// }
+	// pthread_mutex_unlock(&philo->monitor->meal_lock);
+
 }
 
 void	put_forks(t_philos	*philo)
 {
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->prev->fork);
-	if (philo->num_times_to_eat == 0)
-		return ;
+	// pthread_mutex_lock(&philo->monitor->meal_lock);
+	// if (philo->num_times_to_eat == 0)
+	// {
+	// 	pthread_mutex_unlock(&philo->monitor->meal_lock);
+	// 	return ;
+	// }
+	// pthread_mutex_unlock(&philo->monitor->meal_lock);
 	if (custom_printf(philo, "is sleeping"))
 		return ;
 	ft_usleep(philo->time_to_sleep);
@@ -49,14 +69,18 @@ void	put_forks(t_philos	*philo)
 void	*routine(void *arg)
 {
 	t_philos	*philo;
+	pthread_t	philo_tmp;
 
 	philo = (t_philos *)arg;
 	philo->start_time = getime();
+
 	if (philo->philo_num % 2 == 0)
 		ft_usleep(philo->time_to_eat);
 	while (!ft_died_or_stop(philo))
 	{
 		take_forks(philo);
+		// if (philo->num_times_to_eat == 0)
+		// 	break;
 		put_forks(philo);
 	}
 	return (NULL);
@@ -68,7 +92,7 @@ int	main(int ac, char **av)
 	t_philos	*philos;
 	t_monitor	*monitor;
 
-	atexit(f);
+	//atexit(f);
 	args = ft_parser(ac, av);
 	if (!args)
 		return (1);
