@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:45:42 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/17 23:28:58 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/23 00:19:57 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,18 @@ int	create_philosopher_threads(t_philos *philos,
 	return (0);
 }
 
-int	initialize_monitor(t_monitor **monitor)
+int	initialize_monitor(t_monitor **monitor, int *args)
 {
 	(*monitor) = malloc(sizeof(t_monitor));
 	if (!(*monitor))
 		return (1);
 	if (pthread_mutex_init(&(*monitor)->dead_lock, NULL))
 		return (free((*monitor)), 1);
-	if (pthread_mutex_init(&(*monitor)->write_lock, NULL))
-		return (pthread_mutex_destroy(&(*monitor)->dead_lock),
-			free((*monitor)), 1);
 	(*monitor)->dead_flag = 0;
+	(*monitor)->num_of_philos = args[0];
+	(*monitor)->time_to_die = args[1];
+	(*monitor)->time_to_eat = args[2];
+	(*monitor)->time_to_sleep = args[3];
 	return (0);
 }
 
@@ -80,7 +81,7 @@ int	initialize_philosophers(t_philos **philos,
 	*philos = NULL;
 	while (i < args[0])
 	{
-		philo_tmp = ft_lstnew(args, i, ac);
+		philo_tmp = ft_lstnew(args, i + 1, ac);
 		if (!philo_tmp)
 		{
 			ft_lstclear(philos);

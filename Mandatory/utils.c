@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/17 23:21:40 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/23 00:20:03 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,13 @@ t_philos	*ft_lstnew(int *args, int i, int ac)
 	philo = malloc(sizeof(t_philos));
 	if (!philo)
 		return (NULL);
-	philo->philo_num = i + 1;
-	philo->num_of_philos = args[0];
-	philo->time_to_die = args[1];
-	philo->time_to_eat = args[2];
-	philo->time_to_sleep = args[3];
+	philo->philo_num = i;
+	philo->start_time = getime();
 	if (ac == 6)
 		philo->num_times_to_eat = args[4];
 	else
 		philo->num_times_to_eat = -1;
-	philo->last_meal = 0;
+	philo->last_meal = getime();
 	if (pthread_mutex_init(&philo->fork, NULL))
 		return (free(philo), NULL);
 	philo->next = NULL;
@@ -75,7 +72,6 @@ void	ft_lstclear(t_philos **lst)
 		return ;
 	current = *lst;
 	pthread_mutex_destroy(&(*lst)->monitor->dead_lock);
-	pthread_mutex_destroy(&(*lst)->monitor->write_lock);
 	while (*lst)
 	{
 		nextnode = (*lst)->next;
@@ -89,15 +85,15 @@ void	ft_lstclear(t_philos **lst)
 
 int	custom_printf(t_philos *philo, char *status)
 {
-	pthread_mutex_lock(&philo->monitor->write_lock);
+	pthread_mutex_lock(&philo->monitor->dead_lock);
 	if (philo->monitor->dead_flag == 0)
 		printf("%lums Philosopher %d %s\n",
 			getime() - philo->start_time, philo->philo_num, status);
 	else
 	{
-		pthread_mutex_unlock(&philo->monitor->write_lock);
+		pthread_mutex_unlock(&philo->monitor->dead_lock);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->monitor->write_lock);
+	pthread_mutex_unlock(&philo->monitor->dead_lock);
 	return (0);
 }

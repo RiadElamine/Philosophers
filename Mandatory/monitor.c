@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 05:54:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/17 22:36:01 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/24 00:51:49 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,70 +30,52 @@ int	ft_usleep(size_t ms)
 	return (0);
 }
 
-
-void *monitor_died(void *arg)
+void	*ft_monitor_died(void *arg)
 {
 	t_philos	*philo;
+	int			i;
 
 	philo = (t_philos *)arg;
-	while (1)
+	i = philo->monitor->num_of_philos;
+	while (i)
 	{
-		// pthread_mutex_lock(&philo->monitor->meal_lock);
-		// if (philo->num_times_to_eat == 0)
-		// {
-		// 	pthread_mutex_lock(&philo->monitor->write_lock);
-		// 	philo->monitor->dead_flag = 1;
-		// 	pthread_mutex_unlock(&philo->monitor->write_lock);
-		// 	pthread_mutex_unlock(&philo->monitor->meal_lock);
-		// 	break;
-		// }
-		// pthread_mutex_unlock(&philo->monitor->meal_lock);
 		pthread_mutex_lock(&philo->monitor->dead_lock);
-		if (philo->monitor->dead_flag == 1)
+		if (philo->num_times_to_eat == 0)
 		{
-			pthread_mutex_unlock(&philo->monitor->dead_lock);
-			break;
-		}
-		if (philo->last_meal == 0 )
-		{
+			philo = philo->next;
+			i--;
 			pthread_mutex_unlock(&philo->monitor->dead_lock);
 			continue ;
 		}
-		else if ((getime() - philo->last_meal) > philo->time_to_die)
+		if (philo->monitor->dead_flag == 1)
 		{
-			pthread_mutex_lock(&philo->monitor->write_lock);
+			pthread_mutex_unlock(&philo->monitor->dead_lock);
+			return (NULL);
+		}
+		if ((getime() - philo->last_meal) > philo->monitor->time_to_die)
+		{
 			printf("%zums Philosopher %d died\n",
 				(getime() - philo->start_time), philo->philo_num);
 			philo->monitor->dead_flag = 1;
-			pthread_mutex_unlock(&philo->monitor->write_lock);
 			pthread_mutex_unlock(&philo->monitor->dead_lock);
-			break;
+			return (NULL);
 		}
 		pthread_mutex_unlock(&philo->monitor->dead_lock);
-		usleep(500);
+		philo = philo->next;
 	}
-
 	return (NULL);
 }
 
-int	ft_died_or_stop(t_philos *philo)
+int	initialize_monitor_died(t_philos *philos)
 {
+	pthread_t	monitor_died;
 
-	if (philo->num_of_philos == 1)
+	if (pthread_create(&monitor_died, NULL,
+			ft_monitor_died, philos) != 0)
 	{
-		printf("%zums Philosopher %d died\n",
-			(getime() - philo->start_time), philo->philo_num);
+		printf("Error: Thread creation failed\n");
 		return (1);
 	}
-	// if (philo->num_times_to_eat == 0)
-	// 	return (1);
-	// pthread_mutex_lock(&philo->monitor->meal_lock);
-	// if (philo->num_times_to_eat == 0)
-	// 	return (pthread_mutex_unlock(&philo->monitor->meal_lock), 1);
-	// pthread_mutex_unlock(&philo->monitor->meal_lock);
-	pthread_mutex_lock(&philo->monitor->dead_lock);
-	if (philo->monitor->dead_flag == 1)
-		return (pthread_mutex_unlock(&philo->monitor->dead_lock), 1);
-	pthread_mutex_unlock(&philo->monitor->dead_lock);
+	pthread_detach(monitor_died);
 	return (0);
 }
