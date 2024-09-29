@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:45:42 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/23 00:19:57 by relamine         ###   ########.fr       */
+/*   Updated: 2024/09/29 04:36:49 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ int	join_philosophers(t_philos *philos, int ac)
 		}
 		i++;
 		philo_tmp = philo_tmp->next;
+	}
+	if (pthread_join(philos->monitor->monitor_died, NULL) != 0)
+	{
+		printf("Error: Thread join failed\n");
+		ft_lstclear(&philos);
+		return (1);
 	}
 	return (0);
 }
@@ -97,5 +103,17 @@ int	initialize_philosophers(t_philos **philos,
 	}
 	philo_first->prev = ft_lstlast(*philos);
 	philo_tmp->next = philo_first;
+	return (0);
+}
+
+int	create_monitor_dying(t_philos *philos)
+{
+	if (pthread_create(&philos->monitor->monitor_died, NULL,
+			ft_monitor_died, philos) != 0)
+	{
+		printf("Error: Thread creation failed\n");
+		ft_lstclear(&philos);
+		return (1);
+	}
 	return (0);
 }
