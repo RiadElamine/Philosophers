@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/relamine/Desktop/Philosophers",
-      "program": "/Users/relamine/Desktop/Philosophers/build/Debug/outDebug"
+      "cwd": "/Users/relamine/Desktop/philosophers_src/philo_bonus",
+      "program": "/Users/relamine/Desktop/philosophers_src/philo_bonus/build/Debug/outDebug"
     }
   ]
 }
