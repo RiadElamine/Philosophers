@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:30:23 by relamine          #+#    #+#             */
-/*   Updated: 2024/10/01 13:16:58 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:59:21 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 void	take_forks(t_philos	*philo)
 {
 	sem_wait(philo->fork);
-	custom_printf(philo, "takes a fork");
+	custom_printf(philo, "has taken a fork");
 	sem_wait(philo->fork);
-	custom_printf(philo, "takes a fork");
+	custom_printf(philo, "has taken a fork");
 }
 
 void	put_forks(t_philos	*philo)
 {
-	custom_printf(philo, "is Eating");
+	custom_printf(philo, "is eating");
 	sem_wait(philo->dead_lock);
 	philo->last_meal = getime();
 	if (philo->num_times_to_eat > 0)

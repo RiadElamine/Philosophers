@@ -6,21 +6,22 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:34:37 by relamine          #+#    #+#             */
-/*   Updated: 2024/10/01 13:18:52 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:55:34 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <semaphore.h>
-#include <signal.h>
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
+# include <semaphore.h>
+# include <signal.h>
 
-#define MAXINT 214748364
+# define MAXINT 214748364
 
 typedef struct s_philos
 {
@@ -59,3 +60,5 @@ void		*ft_monitor_died(void *arg);
 int			ft_check_died(t_philos *philo);
 int			create_monitor_dying(t_philos *philos);
 void		clean(sem_t *forks, sem_t *dead_lock, int *args, int *pid);
+
+#endif

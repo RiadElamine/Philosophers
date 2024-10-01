@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:30:23 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/29 03:56:24 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:57:39 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int	take_forks(t_philos	*philo)
 {
 	pthread_mutex_lock(&philo->fork);
-	if (custom_printf(philo, "takes a fork")
+	if (custom_printf(philo, "has taken a fork")
 		|| philo->monitor->num_of_philos == 1)
 		return (pthread_mutex_unlock(&philo->fork), 0);
 	pthread_mutex_lock(&philo->prev->fork);
-	if (custom_printf(philo, "takes a fork"))
+	if (custom_printf(philo, "has taken a fork"))
 		return (pthread_mutex_unlock(&philo->fork),
 			pthread_mutex_unlock(&philo->prev->fork), 0);
 	return (1);
@@ -27,7 +27,7 @@ int	take_forks(t_philos	*philo)
 
 int	put_forks(t_philos	*philo)
 {
-	if (custom_printf(philo, "is Eating"))
+	if (custom_printf(philo, "is eating"))
 		return (pthread_mutex_unlock(&philo->fork),
 			pthread_mutex_unlock(&philo->prev->fork), 0);
 	pthread_mutex_lock(&philo->monitor->dead_lock);

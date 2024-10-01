@@ -6,19 +6,20 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 10:34:37 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/29 03:53:50 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:55:59 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef PHILO_H
+# define PHILO_H
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <unistd.h>
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
 
-#define MAXINT 214748364
+# define MAXINT 214748364
 
 typedef struct s_monitor
 {
@@ -60,3 +61,5 @@ int			ft_usleep(size_t ms, t_philos *philo);
 size_t		getime(void);
 void		*ft_monitor_died(void *arg);
 int			custom_printf(t_philos *philo, char *status);
+
+#endif

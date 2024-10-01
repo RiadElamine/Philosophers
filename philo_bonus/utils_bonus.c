@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/10/01 13:01:41 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:35:26 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	custom_printf(t_philos *philo, char *status)
 {
 	sem_wait(philo->dead_lock);
 	if (philo->dead_flag == 0)
-		printf("%lums Philosopher %d %s\n",
+		printf("%lu %d %s\n",
 			getime() - philo->start_time, philo->philo_num, status);
 	sem_post(philo->dead_lock);
 	return ;

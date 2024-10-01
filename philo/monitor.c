@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 05:54:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/29 04:37:00 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:58:08 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	ft_check_died(t_philos *philo)
 	}
 	if ((getime() - philo->last_meal) > philo->monitor->time_to_die)
 	{
-		printf("%zums Philosopher %d died\n",
+		printf("%zu %d died\n",
 			(getime() - philo->start_time), philo->philo_num);
 		philo->monitor->dead_flag = 1;
 		pthread_mutex_unlock(&philo->monitor->dead_lock);

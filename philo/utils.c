@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:41:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/09/30 11:09:44 by relamine         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:01:02 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	custom_printf(t_philos *philo, char *status)
 {
 	pthread_mutex_lock(&philo->monitor->dead_lock);
 	if (philo->monitor->dead_flag == 0)
-		printf("%lums Philosopher %d %s\n",
+		printf("%lu %d %s\n",
 			getime() - philo->start_time, philo->philo_num, status);
 	else
 	{
